@@ -73,6 +73,7 @@ const GetAllProductsByPage = async (req, res) => {
 
   try {
     const products = await Product.findAndCountAll({
+      order: [["createdAt", "DESC"]],
      // This replaces the reverse() method
         limit:size,
         offset:page *size
