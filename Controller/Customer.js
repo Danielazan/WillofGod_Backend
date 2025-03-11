@@ -44,7 +44,7 @@ const GetAllcustomerByPage = async (req, res) => {
     }
 
     let size =5
-    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 10){
+    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 500){
         size = sizeNo
     }
 
