@@ -149,7 +149,6 @@ const UpdateQuantitySales = async (req, res) => {
       {
         Quantity: preproduct.Quantity - Quantity,
         Previous_Qty: Previous_ProductQty,
-        NewQtyAdded: Quantity,
       },
       { where: { id: productid } }
     )
