@@ -33,6 +33,35 @@ const GetAllcustomer = async (req, res) => {
   }
 };
 
+const GetAllcustomerByPage = async (req, res) => {
+  const PageNo = Number.parseInt(req.query.page)
+    const sizeNo = Number.parseInt(req.query.size)
+
+    let page = 0
+
+    if(!Number.isNaN(PageNo) && PageNo > 0){
+        page =PageNo
+    }
+
+    let size =5
+    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 10){
+        size = sizeNo
+    }
+
+  try {
+    const branch = await Customer.findAndCountAll({
+      order: [["createdAt", "DESC"]],
+     // This replaces the reverse() method
+        limit:size,
+        offset:page *size
+    }).then((result) => {
+      res.status(200).json(result.rows);
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const GetSinglecustomer = async(req,res)=>{
   const BranchId = req.params.id
   
@@ -68,5 +97,6 @@ module.exports = {
     AddCustomer,
     GetAllcustomer ,
     GetSinglecustomer,
-  DeleteRecord 
+    DeleteRecord ,
+    GetAllcustomerByPage
 };
