@@ -1,4 +1,5 @@
 const { Product } = require("../Models/Products");
+const { Op } = require('sequelize');
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -67,7 +68,7 @@ const GetAllProductsByPage = async (req, res) => {
     }
 
     let size =5
-    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 10){
+    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 400){
         size = sizeNo
     }
 
@@ -80,6 +81,43 @@ const GetAllProductsByPage = async (req, res) => {
     }).then((result) => {
       res.status(200).json(result.rows);
     });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const SearchProducts = async (req, res) => {
+  try {
+    const search = req.params.search; 
+
+    const PageNo = Number.parseInt(req.query.page)
+    const sizeNo = Number.parseInt(req.query.size)
+
+    let page = 0
+
+    if(!Number.isNaN(PageNo) && PageNo > 0){
+        page =PageNo
+    }
+
+    let size =5
+    if(!Number.isNaN(sizeNo) && sizeNo > 0 && sizeNo < 400){
+        size = sizeNo
+    }
+
+    const products = await Product.findAndCountAll({
+      order: [["createdAt", "DESC"]],
+
+      where: {
+        Name: {
+          [Op.like]: `%${search}%`
+        }
+      },
+      // This replaces the reverse() method
+      limit:size,
+      offset:page *size
+    });
+
+    res.status(200).json(products.rows);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -284,5 +322,6 @@ module.exports = {
   UpdateQuantitySales,
   GetProductBranch ,
   DeleteRecord ,
-  GetAllProductsByPage
+  GetAllProductsByPage,
+  SearchProducts
 };

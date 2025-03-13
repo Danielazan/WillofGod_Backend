@@ -7,7 +7,8 @@ const {
     UpdateQuantitySales,
     GetProductBranch ,
     DeleteRecord ,
-    GetAllProductsByPage
+    GetAllProductsByPage,
+    SearchProducts
 } = require("../Controller/Product")
 const express = require("express")
 
@@ -21,6 +22,7 @@ router.get("/productsPage",  GetAllProductsByPage)
 
 router.get("/productsBranch/:Name",     GetProductBranch,
 )
+router.get('/Prosearch/:search', SearchProducts);
 
 router.put("/productsimg",upload.single('image'), UpdateproductImage)
 
